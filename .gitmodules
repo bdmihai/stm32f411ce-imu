@@ -1,0 +1,30 @@
+[submodule "doc/stm32"]
+	path = doc/stm32
+	url = git@github.com:bdmihai/stm32-doc
+[submodule "qbs/modules/stm32"]
+	path = qbs/modules/stm32
+	url = git@github.com:bdmihai/stm32-qbs
+[submodule "source/startup"]
+	path = source/startup
+	url = git@github.com:bdmihai/stm32-startup
+[submodule "source/linker"]
+	path = source/linker
+	url = git@github.com:bdmihai/stm32-linker
+[submodule "source/hal"]
+	path = source/hal
+	url = git@github.com:bdmihai/stm32-hal
+[submodule "source/cmsis"]
+	path = source/cmsis
+	url = git@github.com:bdmihai/stm32-cmsis
+[submodule "source/freertos"]
+	path = source/freertos
+	url = git@github.com:bdmihai/stm32-freertos
+[submodule "source/rencoder"]
+	path = source/rencoder
+	url = git@github.com:bdmihai/stm32-rencoder
+[submodule "source/uprintf"]
+	path = source/uprintf
+	url = git@github.com:bdmihai/stm32-uprintf
+[submodule "source/st7735"]
+	path = source/st7735
+	url = git@github.com:bdmihai/stm32-st7735

@@ -1,0 +1,1 @@
+--style=kr --indent=spaces=4 --align-pointer=name --align-reference=name --indent-classes --indent-switches --indent-namespaces --keep-one-line-blocks --keep-one-line-statements --convert-tabs --mode=c --attach-return-type --attach-return-type-decl

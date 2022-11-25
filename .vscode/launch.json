@@ -1,0 +1,62 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "cwd": "${workspaceRoot}",
+            "executable": "${workspaceFolder}/bin/application.elf",
+            "name": "OpenOCD",
+            "request": "launch",
+            "device": "STM32F411xx",
+            "type": "cortex-debug",
+            "servertype": "openocd",
+            "svdFile": "${workspaceFolder}/doc/stm32/svd/STM32F411.svd",
+            "searchDir": [
+                "${env:HOME}//work/tools/openocd/tcl"
+            ],
+            "configFiles": [
+                "interface/stlink-v3.cfg",
+                "board/stm32f411xx.cfg"
+            ],
+            "swoConfig":{
+                "enabled":true,
+                "source":"probe",
+                "swoFrequency": 2000000,
+                "cpuFrequency":96000000,
+                "decoders": [
+                    {
+                        "port": 0,
+                        "type": "console",
+                        "label": "Output",
+                        "encoding":"ascii"
+                    }
+                ]
+            }
+        },
+        {
+            "cwd": "${workspaceRoot}",
+            "executable": "${workspaceFolder}/bin/application.elf",
+            "name": "OpenOCD + RTOS",
+            "request": "launch",
+            "device": "STM32F411xx",
+            "type": "cortex-debug",
+            "servertype": "openocd",
+            "rtos": "FreeRTOS",
+            "svdFile": "${workspaceFolder}/doc/stm32/svd/STM32F411.svd",
+            "searchDir": [
+                "${env:HOME}//work/tools/openocd/tcl"
+            ],
+            "configFiles": [
+                "interface/stlink-v3.cfg",
+                "board/stm32f411xx.cfg"
+            ],
+            "openOCDLaunchCommands": [
+                "stm32f1x.cpu configure -rtos FreeRTOS"
+            ],
+            "overrideLaunchCommands": [
+            ]
+        }
+    ]
+}

@@ -1,0 +1,31 @@
+{
+    "configurations": [
+        {
+            "name": "Linux",
+            "includePath": [
+                "./source/cmsis/ARM/**",
+                "./source/cmsis/STM32F4xx/**",
+                "./source/hal/STM32F4xx/**",
+                "./source/startup/STM32F4xx/**",
+                "./source/uprintf/**",
+                "./source/st7735/**",
+                "./source/mpu6050/**",
+                "./source/freertos/**",
+                "./source/rencoder/**",
+                "/usr/lib/gcc/arm-none-eabi/12.2.0/include/**",
+                "/usr/lib/gcc/arm-none-eabi/12.2.0/include-fixed/**",
+                "/usr/lib/gcc/arm-none-eabi/12.2.0/../../../../arm-none-eabi/include/**"
+            ],
+            "forcedInclude": [],
+            "compilerPath": "/usr/bin/arm-none-eabi-g++",
+            "cStandard": "c11",
+            "cppStandard": "c++17",
+            "defines": [
+                "STM32F411xE",
+                "HAL_MODULE_ENABLED",
+                "__ARM_ARCH_7M__=1"
+            ]
+        }
+    ],
+    "version": 4
+}
