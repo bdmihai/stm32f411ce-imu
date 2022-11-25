@@ -28,3 +28,6 @@
 [submodule "source/st7735"]
 	path = source/st7735
 	url = git@github.com:bdmihai/stm32-st7735
+[submodule "source/mpu6050"]
+	path = source/mpu6050
+	url = git@github.com:bdmihai/stm32-mpu6050.git
