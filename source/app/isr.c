@@ -30,30 +30,40 @@
 #include "queue.h"
 #include "isr.h"
 #include "gpio.h"
+#include "dma.h"
 
 void isr_init()
 {
     /* mask the EXTI lines as interupts */
     MODIFY_REG(EXTI->IMR, EXTI_IMR_MR0_Msk,  EXTI_IMR_MR0);
     MODIFY_REG(EXTI->IMR, EXTI_IMR_MR1_Msk,  EXTI_IMR_MR1);
+    MODIFY_REG(EXTI->IMR, EXTI_IMR_MR9_Msk,  EXTI_IMR_MR9);
     MODIFY_REG(EXTI->IMR, EXTI_IMR_MR10_Msk, EXTI_IMR_MR10);
 
-    /* set rising edge as trigger */
+    /* set rising/falling edge as trigger */
     MODIFY_REG(EXTI->RTSR, EXTI_RTSR_TR0_Msk,  EXTI_RTSR_TR0);
     MODIFY_REG(EXTI->FTSR, EXTI_FTSR_TR0_Msk,  EXTI_FTSR_TR0);
     MODIFY_REG(EXTI->RTSR, EXTI_RTSR_TR1_Msk,  EXTI_RTSR_TR1);
     MODIFY_REG(EXTI->FTSR, EXTI_FTSR_TR1_Msk,  EXTI_FTSR_TR1);
+    MODIFY_REG(EXTI->RTSR, EXTI_RTSR_TR9_Msk,  EXTI_RTSR_TR9);
+    MODIFY_REG(EXTI->FTSR, EXTI_FTSR_TR9_Msk,  0);
     MODIFY_REG(EXTI->RTSR, EXTI_RTSR_TR10_Msk, EXTI_RTSR_TR10);
     MODIFY_REG(EXTI->FTSR, EXTI_FTSR_TR10_Msk, EXTI_FTSR_TR10);
 
     /* enable interupt */
     NVIC_SetPriority(EXTI0_IRQn,        NVIC_EncodePriority(NVIC_GetPriorityGrouping(), 11 /* PreemptPriority */, 0 /* SubPriority */));
     NVIC_SetPriority(EXTI1_IRQn,        NVIC_EncodePriority(NVIC_GetPriorityGrouping(), 11 /* PreemptPriority */, 0 /* SubPriority */));
+    NVIC_SetPriority(EXTI9_5_IRQn,      NVIC_EncodePriority(NVIC_GetPriorityGrouping(), 11 /* PreemptPriority */, 0 /* SubPriority */));
     NVIC_SetPriority(EXTI15_10_IRQn,    NVIC_EncodePriority(NVIC_GetPriorityGrouping(), 11 /* PreemptPriority */, 0 /* SubPriority */));
+    NVIC_SetPriority(DMA1_Stream0_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(), 11 /* PreemptPriority */, 0 /* SubPriority */));
+    NVIC_SetPriority(DMA1_Stream1_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(), 11 /* PreemptPriority */, 0 /* SubPriority */));
 
     NVIC_EnableIRQ(EXTI0_IRQn);
     NVIC_EnableIRQ(EXTI1_IRQn);
+    NVIC_EnableIRQ(EXTI9_5_IRQn);
     NVIC_EnableIRQ(EXTI15_10_IRQn);
+    NVIC_EnableIRQ(DMA1_Stream0_IRQn);
+    NVIC_EnableIRQ(DMA1_Stream1_IRQn);
 }
 
 void EXTI0_IRQHandler(void)
@@ -68,8 +78,24 @@ void EXTI1_IRQHandler(void)
   SET_BIT(EXTI->PR, EXTI_PR_PR1_Msk);
 }
 
+void EXTI9_5_IRQHandler (void)
+{
+  gpio_handle_imu_interupt();
+  SET_BIT(EXTI->PR, EXTI_PR_PR9_Msk);
+}
+
 void EXTI15_10_IRQHandler(void)
 {
   gpio_handle_key();
   SET_BIT(EXTI->PR, EXTI_PR_PR10_Msk);
+}
+
+void DMA1_Stream0_IRQHandler(void)
+{
+  dma_isr_rx_handler();
+}
+
+void DMA1_Stream1_IRQHandler(void)
+{
+  dma_isr_tx_handler();
 }

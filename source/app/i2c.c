@@ -42,6 +42,8 @@ void i2c_init()
     MODIFY_REG(I2C1->FLTR, I2C_FLTR_DNF_Msk, 0 << I2C_FLTR_DNF_Pos);            /* keep digital filter off */
 
     MODIFY_REG(I2C1->CR1, I2C_CR1_PE_Msk, I2C_CR1_PE);                          /* enable i2c */
+    //MODIFY_REG(I2C1->CR2, I2C_CR2_DMAEN_Msk, I2C_CR2_DMAEN);                    /* enable i2c dma */
+    //MODIFY_REG(I2C1->CR2, I2C_CR2_LAST_Msk,  I2C_CR2_LAST);                     /* enable i2c dma last NACK */
 }
 
 uint16_t i2c_write(uint8_t address, const uint8_t *buffer, uint16_t size)
@@ -122,4 +124,42 @@ uint16_t i2c_read(uint8_t address, uint8_t *buffer, uint16_t size)
     buffer[size - 1] = I2C1->DR;
 
     return size;
+}
+
+void i2c_start_write(uint8_t address)
+{
+    // generate a start condition and wait for it to be sent
+    MODIFY_REG(I2C1->CR1, I2C_CR1_START_Msk, I2C_CR1_START);
+    do {
+    } while ((I2C1->SR1 & I2C_SR1_SB_Msk) != I2C_SR1_SB);
+
+    // send address and wait for ADDR and TRA
+    I2C1->DR = (address << 1);
+    do {
+    } while ((I2C1->SR1 & I2C_SR1_ADDR_Msk) != I2C_SR1_ADDR);
+    do {
+    } while ((I2C1->SR2 & I2C_SR2_MSL_Msk) != I2C_SR2_MSL);
+}
+
+void i2c_start_read(uint8_t address, uint16_t size)
+{
+    // generate a start condition and wait for it to be sent
+    MODIFY_REG(I2C1->CR1, I2C_CR1_START_Msk, I2C_CR1_START);
+    do {
+    } while ((I2C1->SR1 & I2C_SR1_SB_Msk) != I2C_SR1_SB);
+
+    // send address and wait for ADDR
+    I2C1->DR = (address << 1) | 0x01;
+    do {
+    } while ((I2C1->SR1 & I2C_SR1_ADDR_Msk) != I2C_SR1_ADDR);
+    // clear the ACK if only one byte is to be received
+    MODIFY_REG(I2C1->CR1, I2C_CR1_ACK_Msk, ((size > 1) ? I2C_CR1_ACK : 0));
+    do {
+    } while ((I2C1->SR2 & I2C_SR2_MSL_Msk) != I2C_SR2_MSL);
+
+}
+
+void i2c_stop()
+{
+    MODIFY_REG(I2C1->CR1, I2C_CR1_STOP_Msk, I2C_CR1_STOP);
 }

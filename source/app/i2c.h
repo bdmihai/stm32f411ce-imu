@@ -31,3 +31,8 @@ void i2c_init();
 /* basic read/write */
 uint16_t i2c_write(uint8_t address, const uint8_t *buffer, uint16_t size);
 uint16_t i2c_read(uint8_t address, uint8_t *buffer, uint16_t size);
+
+/* dma based read/write */
+void i2c_start_write(uint8_t address);
+void i2c_start_read(uint8_t address, uint16_t size);
+void i2c_stop();

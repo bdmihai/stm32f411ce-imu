@@ -31,6 +31,8 @@
 #include "gpio.h"
 #include "rencoder.h"
 
+extern TaskHandle_t motion_run_task;
+
 void gpio_init()
 {
     /* disable JTAG */
@@ -72,6 +74,11 @@ void gpio_init()
     MODIFY_REG(SYSCFG->EXTICR[0], SYSCFG_EXTICR1_EXTI0,  SYSCFG_EXTICR1_EXTI0_PB);    /* map gpio to EXTI lines */
     MODIFY_REG(SYSCFG->EXTICR[0], SYSCFG_EXTICR1_EXTI1,  SYSCFG_EXTICR1_EXTI1_PB);    /* map gpio to EXTI lines */
     MODIFY_REG(SYSCFG->EXTICR[2], SYSCFG_EXTICR3_EXTI10, SYSCFG_EXTICR3_EXTI10_PB);   /* map gpio to EXTI lines */
+
+    /* configuration of the IMU interupt pin */
+    MODIFY_REG(GPIOB->MODER, GPIO_MODER_MODER9_Msk, 0);                              /* set the pin as input */
+    MODIFY_REG(GPIOB->PUPDR, GPIO_PUPDR_PUPD9_Msk, 0);                               /* no pull up, no pull down */
+    MODIFY_REG(SYSCFG->EXTICR[2], SYSCFG_EXTICR3_EXTI9, SYSCFG_EXTICR3_EXTI9_PB);    /* map gpio to EXTI lines */
 
     /* configure tft control pins */
     MODIFY_REG(GPIOA->MODER, GPIO_MODER_MODER6_Msk, GPIO_MODER_MODER6_0);   /* set the pin as output */
@@ -154,4 +161,19 @@ void gpio_tft_res_high()
 void gpio_tft_res_low()
 {
   GPIOA->BSRR = GPIO_BSRR_BR3;
+}
+
+void gpio_handle_imu_interupt()
+{
+  BaseType_t xHigherPriorityTaskWoken = pdFALSE;
+
+  vTaskNotifyGiveFromISR(motion_run_task, &xHigherPriorityTaskWoken);
+
+  /* If xHigherPriorityTaskWoken is now set to pdTRUE then a context switch
+  should be performed to ensure the interrupt returns directly to the highest
+  priority task.  The macro used for this purpose is dependent on the port in
+  use and may be called portEND_SWITCHING_ISR(). */
+  if (xHigherPriorityTaskWoken) {
+    portYIELD_FROM_ISR();
+  }
 }

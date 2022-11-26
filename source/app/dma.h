@@ -1,6 +1,6 @@
 /*_____________________________________________________________________________
  │                                                                            |
- │ COPYRIGHT (C) 2021 Mihai Baneu                                             |
+ │ COPYRIGHT (C) 2022 Mihai Baneu                                             |
  │                                                                            |
  | Permission is hereby  granted,  free of charge,  to any person obtaining a |
  | copy of this software and associated documentation files (the "Software"), |
@@ -21,26 +21,44 @@
  | THE USE OR OTHER DEALINGS IN THE SOFTWARE.                                 |
  |____________________________________________________________________________|
  |                                                                            |
- |  Author: Mihai Baneu                           Last modified: 14.Nov.2021  |
+ |  Author: Mihai Baneu                           Last modified: 23.Jul.2022  |
  |                                                                            |
  |___________________________________________________________________________*/
- 
+
 #pragma once
 
-/* initialization */
-void gpio_init();
+typedef enum {
+    dma_request_type_i2c_write,
+    dma_request_type_i2c_read,
+} dma_request_type;
 
-/* led control */
-void gpio_set_blue_led();
-void gpio_reset_blue_led();
-void gpio_toggle_blue_led();
+typedef enum {
+    dma_request_status_success,
+    dma_request_status_error,
+} dma_response_status;
 
-void gpio_handle_rotation();
-void gpio_handle_key();
+typedef struct dma_request_event_t {
+    dma_request_type type;
+    uint8_t address;
+    uint8_t buffer[16];
+    uint8_t length;
+} dma_request_event_t;
 
-void gpio_tft_dc_high();
-void gpio_tft_dc_low();
-void gpio_tft_res_high();
-void gpio_tft_res_low();
+typedef struct dma_response_event_t {
+    dma_response_status status;
+    uint8_t buffer[16];
+    uint8_t length;
+} dma_response_event_t;
 
-void gpio_handle_imu_interupt();
+typedef struct dma_buffer_t {
+    uint8_t buffer[16];
+    uint8_t length;
+} dma_buffer_t;
+
+extern QueueHandle_t dma_request_queue;
+extern QueueHandle_t dma_response_queue;
+
+void dma_init();
+void dma_isr_rx_handler();
+void dma_isr_tx_handler();
+void dma_run(void *pvParameters);
