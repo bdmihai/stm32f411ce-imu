@@ -17,7 +17,7 @@
                 "${env:HOME}//work/tools/openocd/tcl"
             ],
             "configFiles": [
-                "interface/stlink-v3.cfg",
+                "interface/stlink.cfg",
                 "board/stm32f411xx.cfg"
             ],
             "swoConfig":{
@@ -49,11 +49,11 @@
                 "${env:HOME}//work/tools/openocd/tcl"
             ],
             "configFiles": [
-                "interface/stlink-v3.cfg",
+                "interface/stlink.cfg",
                 "board/stm32f411xx.cfg"
             ],
             "openOCDLaunchCommands": [
-                "stm32f1x.cpu configure -rtos FreeRTOS"
+                "stm32f4x.cpu configure -rtos FreeRTOS"
             ],
             "overrideLaunchCommands": [
             ]
