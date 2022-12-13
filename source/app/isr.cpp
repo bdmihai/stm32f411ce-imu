@@ -29,6 +29,7 @@
 #include "stm32rtos.h"
 #include "queue.h"
 #include "isr.h"
+#include "system.h"
 #include "gpio.h"
 #include "dma.h"
 
@@ -66,36 +67,54 @@ void isr_init()
     NVIC_EnableIRQ(DMA1_Stream1_IRQn);
 }
 
-void EXTI0_IRQHandler(void)
+/** Hard fault - blink four short flash every two seconds */
+extern "C" void HardFault_Handler()
+{
+    blink(4);
+}
+
+/** Bus fault - blink five short flashes every two seconds */
+extern "C" void BusFault_Handler()
+{
+    blink(5);
+}
+
+/** Usage fault - blink six short flashes every two seconds */
+extern "C" void UsageFault_Handler()
+{
+    blink(6);
+}
+
+extern "C" void EXTI0_IRQHandler(void)
 {
   gpio_handle_rotation();
   SET_BIT(EXTI->PR, EXTI_PR_PR0_Msk);
 }
 
-void EXTI1_IRQHandler(void)
+extern "C" void EXTI1_IRQHandler(void)
 {
   gpio_handle_rotation();
   SET_BIT(EXTI->PR, EXTI_PR_PR1_Msk);
 }
 
-void EXTI9_5_IRQHandler (void)
+extern "C" void EXTI9_5_IRQHandler (void)
 {
   gpio_handle_imu_interupt();
   SET_BIT(EXTI->PR, EXTI_PR_PR9_Msk);
 }
 
-void EXTI15_10_IRQHandler(void)
+extern "C" void EXTI15_10_IRQHandler(void)
 {
   gpio_handle_key();
   SET_BIT(EXTI->PR, EXTI_PR_PR10_Msk);
 }
 
-void DMA1_Stream0_IRQHandler(void)
+extern "C" void DMA1_Stream0_IRQHandler(void)
 {
   dma_isr_rx_handler();
 }
 
-void DMA1_Stream1_IRQHandler(void)
+extern "C" void DMA1_Stream1_IRQHandler(void)
 {
   dma_isr_tx_handler();
 }

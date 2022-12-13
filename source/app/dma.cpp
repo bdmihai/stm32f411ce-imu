@@ -126,8 +126,8 @@ void dma_isr_tx_handler()
 static void i2c_rx(uint8_t *buffer, uint16_t size)
 {
     /* configure the DMA for reception */
-    DMA1_Stream0->PAR  = &(I2C1->DR);
-    DMA1_Stream0->M0AR = buffer;
+    DMA1_Stream0->PAR  = (uint32_t)(&(I2C1->DR));
+    DMA1_Stream0->M0AR = (uint32_t)buffer;
     DMA1_Stream0->NDTR = size;
 
     /* activate the DMA stream */
@@ -137,8 +137,8 @@ static void i2c_rx(uint8_t *buffer, uint16_t size)
 static void i2c_tx(uint8_t *buffer, uint16_t size)
 {
     /* configure the DMA for transmission */
-    DMA1_Stream1->PAR  = &(I2C1->DR);
-    DMA1_Stream1->M0AR = buffer;
+    DMA1_Stream1->PAR  = (uint32_t)&(I2C1->DR);
+    DMA1_Stream1->M0AR = (uint32_t)buffer;
     DMA1_Stream1->NDTR = size;
 
     /* activate the DMA stream */

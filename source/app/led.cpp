@@ -1,6 +1,6 @@
 /*_____________________________________________________________________________
  │                                                                            |
- │ COPYRIGHT (C) 2021 Mihai Baneu                                             |
+ │ COPYRIGHT (C) 2022 Mihai Baneu                                             |
  │                                                                            |
  | Permission is hereby  granted,  free of charge,  to any person obtaining a |
  | copy of this software and associated documentation files (the "Software"), |
@@ -21,7 +21,7 @@
  | THE USE OR OTHER DEALINGS IN THE SOFTWARE.                                 |
  |____________________________________________________________________________|
  |                                                                            |
- |  Author: Mihai Baneu                           Last modified: 18.Nov.2021  |
+ |  Author: Mihai Baneu                           Last modified: 28.Nov.2022  |
  |                                                                            |
  |___________________________________________________________________________*/
 
@@ -40,20 +40,23 @@ void led_run(void *pvParameters)
 {
     (void)pvParameters;
 
+    gpio led_gpio(GPIOC, 13, gpio::output, gpio::push_pull, gpio::low_speed, gpio::no_pull);
+    led_gpio.init();
+
     /* led OFF */
-    gpio_set_blue_led();
+    led_gpio.low();
 
     for (;;) {
-        gpio_reset_blue_led();
+        led_gpio.high();
         vTaskDelay(1000 / portTICK_PERIOD_MS);
 
-        gpio_set_blue_led();
+        led_gpio.low();
         vTaskDelay(100 / portTICK_PERIOD_MS);
 
-        gpio_reset_blue_led();
+        led_gpio.high();
         vTaskDelay(100 / portTICK_PERIOD_MS);
 
-        gpio_set_blue_led();
+        led_gpio.low();
         vTaskDelay(100 / portTICK_PERIOD_MS);
     }
 }

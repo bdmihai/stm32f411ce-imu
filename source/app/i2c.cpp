@@ -42,12 +42,13 @@ void i2c_init()
     MODIFY_REG(I2C1->FLTR, I2C_FLTR_DNF_Msk, 0 << I2C_FLTR_DNF_Pos);            /* keep digital filter off */
 
     MODIFY_REG(I2C1->CR1, I2C_CR1_PE_Msk, I2C_CR1_PE);                          /* enable i2c */
-    //MODIFY_REG(I2C1->CR2, I2C_CR2_DMAEN_Msk, I2C_CR2_DMAEN);                    /* enable i2c dma */
-    //MODIFY_REG(I2C1->CR2, I2C_CR2_LAST_Msk,  I2C_CR2_LAST);                     /* enable i2c dma last NACK */
 }
 
 uint16_t i2c_write(uint8_t address, const uint8_t *buffer, uint16_t size)
 {
+    MODIFY_REG(I2C1->CR2, I2C_CR2_DMAEN_Msk, 0); /* enable i2c dma */
+    MODIFY_REG(I2C1->CR2, I2C_CR2_LAST_Msk,  0); /* enable i2c dma last NACK */
+
     // generate a start condition and wait for it to be sent
     MODIFY_REG(I2C1->CR1, I2C_CR1_START_Msk, I2C_CR1_START);
     do {
@@ -89,6 +90,9 @@ uint16_t i2c_write(uint8_t address, const uint8_t *buffer, uint16_t size)
 
 uint16_t i2c_read(uint8_t address, uint8_t *buffer, uint16_t size)
 {
+    MODIFY_REG(I2C1->CR2, I2C_CR2_DMAEN_Msk, 0); /* enable i2c dma */
+    MODIFY_REG(I2C1->CR2, I2C_CR2_LAST_Msk,  0); /* enable i2c dma last NACK */
+
     // generate a start condition and wait for it to be sent
     MODIFY_REG(I2C1->CR1, I2C_CR1_START_Msk, I2C_CR1_START);
     do {
@@ -128,6 +132,9 @@ uint16_t i2c_read(uint8_t address, uint8_t *buffer, uint16_t size)
 
 void i2c_start_write(uint8_t address)
 {
+    MODIFY_REG(I2C1->CR2, I2C_CR2_DMAEN_Msk, I2C_CR2_DMAEN); /* enable i2c dma */
+    MODIFY_REG(I2C1->CR2, I2C_CR2_LAST_Msk,  I2C_CR2_LAST);  /* enable i2c dma last NACK */
+
     // generate a start condition and wait for it to be sent
     MODIFY_REG(I2C1->CR1, I2C_CR1_START_Msk, I2C_CR1_START);
     do {
@@ -143,6 +150,9 @@ void i2c_start_write(uint8_t address)
 
 void i2c_start_read(uint8_t address, uint16_t size)
 {
+    MODIFY_REG(I2C1->CR2, I2C_CR2_DMAEN_Msk, I2C_CR2_DMAEN); /* enable i2c dma */
+    MODIFY_REG(I2C1->CR2, I2C_CR2_LAST_Msk,  I2C_CR2_LAST);  /* enable i2c dma last NACK */
+
     // generate a start condition and wait for it to be sent
     MODIFY_REG(I2C1->CR1, I2C_CR1_START_Msk, I2C_CR1_START);
     do {
@@ -156,7 +166,6 @@ void i2c_start_read(uint8_t address, uint16_t size)
     MODIFY_REG(I2C1->CR1, I2C_CR1_ACK_Msk, ((size > 1) ? I2C_CR1_ACK : 0));
     do {
     } while ((I2C1->SR2 & I2C_SR2_MSL_Msk) != I2C_SR2_MSL);
-
 }
 
 void i2c_stop()

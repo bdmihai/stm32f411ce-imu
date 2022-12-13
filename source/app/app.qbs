@@ -42,7 +42,7 @@ Product {
     files: [
         "*.h",
         "*.c",
-        "image/*.c"
+        "*.cpp"
     ]
 
     Group {

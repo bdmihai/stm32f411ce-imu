@@ -47,16 +47,24 @@ void tft_init()
 {
     tft_queue = xQueueCreate(6, sizeof(tft_event_t));
 }
+    gpio ttf_res_gpio(GPIOA, 3, gpio::output, gpio::push_pull, gpio::low_speed, gpio::no_pull);
+    gpio ttf_dc_gpio(GPIOA, 6, gpio::output, gpio::push_pull, gpio::low_speed, gpio::no_pull);
 
 void tft_run(void *params)
 {
     (void)params;
 
+    ttf_res_gpio.init();
+    ttf_res_gpio.high();
+
+    ttf_dc_gpio.init();
+    ttf_dc_gpio.low();
+
     st7735_hw_control_t hw = {
-        .res_high = gpio_tft_res_high,
-        .res_low  = gpio_tft_res_low,
-        .dc_high  = gpio_tft_dc_high,
-        .dc_low   = gpio_tft_dc_low,
+        .res_high = []() { ttf_res_gpio.high(); },
+        .res_low  = []() { ttf_res_gpio.low(); },
+        .dc_high  = []() { ttf_dc_gpio.high(); },
+        .dc_low   = []() { ttf_dc_gpio.low(); },
         .data_wr  = spi_write,
         .data_rd  = spi_read,
         .delay_us = delay_us

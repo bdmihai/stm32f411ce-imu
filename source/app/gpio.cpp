@@ -40,12 +40,6 @@ void gpio_init()
     MODIFY_REG(GPIOB->MODER,    GPIO_MODER_MODER4_Msk,      0);                         /* NJTRST disabled */
     MODIFY_REG(GPIOB->MODER,    GPIO_MODER_MODER3_Msk,      0);                         /* JTDO disabled */
 
-    /* configure LED pin */
-    MODIFY_REG(GPIOC->MODER,    GPIO_MODER_MODER13_Msk,     GPIO_MODER_MODER13_0);      /* set the pin as output */
-    MODIFY_REG(GPIOC->OTYPER,   GPIO_OTYPER_OT13_Msk,       0);                         /* push pull */
-    MODIFY_REG(GPIOC->OSPEEDR,  GPIO_OSPEEDR_OSPEED13_Msk,  0);                         /* low speed */
-    MODIFY_REG(GPIOC->PUPDR,    GPIO_PUPDR_PUPD13_Msk,      0);                         /* no pull up, no pull down */
-
     /* configuration of the I2C GPIO pins */
     MODIFY_REG(GPIOB->MODER, GPIO_MODER_MODER6_Msk, GPIO_MODER_MODER6_1);                                   /* set the pin as alternate function */
     MODIFY_REG(GPIOB->MODER, GPIO_MODER_MODER7_Msk, GPIO_MODER_MODER7_1);                                   /* set the pin as alternate function */
@@ -80,22 +74,6 @@ void gpio_init()
     MODIFY_REG(GPIOB->PUPDR, GPIO_PUPDR_PUPD9_Msk, 0);                               /* no pull up, no pull down */
     MODIFY_REG(SYSCFG->EXTICR[2], SYSCFG_EXTICR3_EXTI9, SYSCFG_EXTICR3_EXTI9_PB);    /* map gpio to EXTI lines */
 
-    /* configure tft control pins */
-    MODIFY_REG(GPIOA->MODER, GPIO_MODER_MODER6_Msk, GPIO_MODER_MODER6_0);   /* set the pin as output */
-    MODIFY_REG(GPIOA->MODER, GPIO_MODER_MODER3_Msk, GPIO_MODER_MODER3_0);   /* set the pin as output */
-
-    MODIFY_REG(GPIOA->OTYPER, GPIO_OTYPER_OT6_Msk, 0);                      /* push pull */
-    MODIFY_REG(GPIOA->OTYPER, GPIO_OTYPER_OT3_Msk, 0);                      /* push pull */
-
-    MODIFY_REG(GPIOA->OSPEEDR, GPIO_OSPEEDR_OSPEED6_Msk, 0);                /* low speed */
-    MODIFY_REG(GPIOA->OSPEEDR, GPIO_OSPEEDR_OSPEED3_Msk, 0);                /* low speed */
-
-    MODIFY_REG(GPIOA->PUPDR, GPIO_PUPDR_PUPD6_Msk, 0);                      /* no pull up, no pull down */
-    MODIFY_REG(GPIOA->PUPDR, GPIO_PUPDR_PUPD3_Msk, 0);                      /* no pull up, no pull down */
-
-    gpio_tft_res_high();
-    gpio_tft_dc_low();
-
     /* configure the SPI pins */
     MODIFY_REG(GPIOA->MODER, GPIO_MODER_MODER4_Msk, GPIO_MODER_MODER4_1);                                     /* set the pin as alternate function */
     MODIFY_REG(GPIOA->MODER, GPIO_MODER_MODER5_Msk, GPIO_MODER_MODER5_1);                                     /* set the pin as alternate function */
@@ -110,21 +88,6 @@ void gpio_init()
     MODIFY_REG(GPIOA->AFR[0], GPIO_AFRL_AFSEL7_Msk, 5 << GPIO_AFRL_AFSEL7_Pos);                               /* AF05 - SPI1_MOSI */
 
     MODIFY_REG(GPIOA->PUPDR, GPIO_PUPDR_PUPD4_Msk, 1 << GPIO_PUPDR_PUPD4_Pos);                                /* pull up */
-}
-
-void gpio_set_blue_led()
-{
-    GPIOC->BSRR = GPIO_BSRR_BR13;
-}
-
-void gpio_reset_blue_led()
-{
-    GPIOC->BSRR = GPIO_BSRR_BS13;
-}
-
-void gpio_toggle_blue_led()
-{
-    GPIOC->BSRR = (GPIOB->IDR & GPIO_IDR_IDR_13) ? GPIO_BSRR_BR13 : GPIO_BSRR_BS13;
 }
 
 void gpio_handle_rotation()
@@ -143,26 +106,6 @@ void gpio_handle_key()
   xQueueSendToBackFromISR(rencoder_input_queue, &event, (TickType_t) 0);
 }
 
-void gpio_tft_dc_high()
-{
-  GPIOA->BSRR = GPIO_BSRR_BS6;
-}
-
-void gpio_tft_dc_low()
-{
-  GPIOA->BSRR = GPIO_BSRR_BR6;
-}
-
-void gpio_tft_res_high()
-{
-  GPIOA->BSRR = GPIO_BSRR_BS3;
-}
-
-void gpio_tft_res_low()
-{
-  GPIOA->BSRR = GPIO_BSRR_BR3;
-}
-
 void gpio_handle_imu_interupt()
 {
   BaseType_t xHigherPriorityTaskWoken = pdFALSE;
@@ -176,4 +119,42 @@ void gpio_handle_imu_interupt()
   if (xHigherPriorityTaskWoken) {
     portYIELD_FROM_ISR();
   }
+}
+
+gpio::gpio(GPIO_TypeDef *port, uint8_t pin, gpio_mode mode, gpio_otype otype, gpio_ospeed ospeed, gpio_pupd pupd)
+{
+  m_port = port;
+  m_pin = pin;
+  m_mode = mode;
+  m_otype = otype;
+  m_ospeed = ospeed;
+  m_pupd = pupd;
+}
+
+void gpio::init()
+{
+  MODIFY_REG(m_port->MODER,   (0x3UL << (m_pin*2)), (m_mode   << (m_pin*2)));
+  MODIFY_REG(m_port->OTYPER,  (0x1UL << (m_pin*1)), (m_otype  << (m_pin*1)));
+  MODIFY_REG(m_port->OSPEEDR, (0x3UL << (m_pin*2)), (m_ospeed << (m_pin*2)));
+  MODIFY_REG(m_port->PUPDR,   (0x3UL << (m_pin*2)), (m_pupd   << (m_pin*2)));
+}
+
+void gpio::high()
+{
+  m_port->BSRR = (0x1UL << m_pin);
+}
+
+void gpio::low()
+{
+  m_port->BSRR = (0x1UL << (m_pin + 16));
+}
+
+void gpio::toggle()
+{
+
+}
+
+uint32_t gpio::value()
+{
+  return (m_port->IDR & (0x1UL << m_pin));
 }

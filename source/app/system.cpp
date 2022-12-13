@@ -107,7 +107,7 @@ void system_init()
 /**
  * delay in us (blockig)
  */
-void delay_us(const uint32_t us)
+extern "C" void delay_us(const uint32_t us)
 {
     SET_BIT(TIM10->EGR, TIM_EGR_UG);
     do {
@@ -119,20 +119,23 @@ void delay_us(const uint32_t us)
  * This function can only be called after the initialization phase. It is used for
  * faults after RTOS start.
 */
-void blink(const uint8_t n)
+extern "C" void blink(const uint8_t n)
 {
+    gpio led_gpio(GPIOC, 13, gpio::output, gpio::push_pull, gpio::low_speed, gpio::no_pull);
+    led_gpio.init();
+
     /* enable DWT */
     CoreDebug->DEMCR |= CoreDebug_DEMCR_TRCENA_Msk;
     DWT->CTRL |= DWT_CTRL_CYCCNTENA_Msk;
 
     for (;;) {
         for (int i = 0; i < n; i++) {
-            gpio_set_blue_led();
+            led_gpio.low();
             DWT->CYCCNT = 0;
             do {
             } while (DWT->CYCCNT < (100 * (configCPU_CLOCK_HZ / 1000)));
 
-            gpio_reset_blue_led();
+            led_gpio.high();
             DWT->CYCCNT = 0;
             do {
             } while (DWT->CYCCNT < (400 * (configCPU_CLOCK_HZ / 1000)));
@@ -142,7 +145,7 @@ void blink(const uint8_t n)
     }
 }
 
-int _write(int file, char *ptr, int len)
+extern "C" int _write(int file, char *ptr, int len)
 {
     (void)(file);
     for (int i = 0; i < len; i++) {
@@ -151,20 +154,3 @@ int _write(int file, char *ptr, int len)
     return len;
 }
 
-/** Hard fault - blink four short flash every two seconds */
-void HardFault_Handler()
-{
-    blink(4);
-}
-
-/** Bus fault - blink five short flashes every two seconds */
-void BusFault_Handler()
-{
-    blink(5);
-}
-
-/** Usage fault - blink six short flashes every two seconds */
-void UsageFault_Handler()
-{
-    blink(6);
-}

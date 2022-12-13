@@ -50,19 +50,20 @@ static void user_handler(void *pvParameters)
     for (;;) {
         rencoder_output_event_t event;
         if (xQueueReceive(rencoder_output_queue, &event, portMAX_DELAY) == pdPASS) {
-            tft_event_t tft_event;
-            if (event.type == rencoder_output_rotation) {
-                tft_event.type = tft_event_motion;
-                tft_event.motion.ax = event.position;
-                xQueueSendToBack(tft_queue, &tft_event, (TickType_t) 1);
-            } else if ((event.type == rencoder_output_key) && (event.key == RENCODER_KEY_RELEASED)) {
-                rencoder_reset();
+            switch(event.type) {
+                case rencoder_output_rotation:
+                    break;
+                case rencoder_output_key:
+                    if (event.key == RENCODER_KEY_RELEASED) {
+                        rencoder_reset();
+                    }
+                    break;
             }
         }
     }
 }
 
-void update_run(void *pvParameters)
+static void update_run(void *pvParameters)
 {
     (void)pvParameters;
 
@@ -80,7 +81,7 @@ void update_run(void *pvParameters)
     }
 }
 
-void motion_run(void *pvParameters)
+static void motion_run(void *pvParameters)
 {
     (void)pvParameters;
 
@@ -94,7 +95,7 @@ void motion_run(void *pvParameters)
     mpu6050_init(hw);
 
     for (;;) {
-        /* wait to be notified of an interrupt. */
+        // wait to be notified of an interrupt
         ulTaskNotifyTake(pdTRUE, portMAX_DELAY );
 
         // get the data from the IMU
@@ -135,10 +136,10 @@ int main(void)
     xTaskCreate(led_run,      "led",          configMINIMAL_STACK_SIZE,     NULL, 3, NULL);
     xTaskCreate(tft_run,      "tft",          configMINIMAL_STACK_SIZE*2,   NULL, 2, NULL);
     xTaskCreate(dma_run,      "dma",          configMINIMAL_STACK_SIZE*2,   NULL, 2, NULL);
+    xTaskCreate(rencoder_run, "rencoder",     configMINIMAL_STACK_SIZE,     NULL, 2, NULL);
     xTaskCreate(user_handler, "user_handler", configMINIMAL_STACK_SIZE*2,   NULL, 2, NULL);
     xTaskCreate(update_run,   "update_run",   configMINIMAL_STACK_SIZE*2,   NULL, 2, NULL);
     xTaskCreate(motion_run,   "motion_run",   configMINIMAL_STACK_SIZE*2,   NULL, 9, &motion_run_task);
-    xTaskCreate(rencoder_run, "rencoder",     configMINIMAL_STACK_SIZE,     NULL, 2, NULL);
 
     /* start the scheduler. */
     vTaskStartScheduler();

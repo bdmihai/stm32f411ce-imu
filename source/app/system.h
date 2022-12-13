@@ -28,5 +28,14 @@
 #pragma once
 
 void system_init();
+
+#ifdef __cplusplus
+    extern "C" {
+#endif
+
 void delay_us(const uint32_t us);
 void blink(const uint8_t n);
+
+#ifdef __cplusplus
+    }
+#endif
