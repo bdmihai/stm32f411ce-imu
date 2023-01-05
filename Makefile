@@ -1,6 +1,6 @@
 #______________________________________________________________________________
 #│                                                                            |
-#│ COPYRIGHT (C) 2021 Mihai Baneu                                             |
+#│ COPYRIGHT (C) 2023 Mihai Baneu                                             |
 #│                                                                            |
 #| Permission is hereby  granted,  free of charge,  to any person obtaining a |
 #| copy of this software and associated documentation files (the "Software"), |
@@ -21,15 +21,15 @@
 #| THE USE OR OTHER DEALINGS IN THE SOFTWARE.                                 |
 #|____________________________________________________________________________|
 #|                                                                            |
-#|  Author: Mihai Baneu                           Last modified: 03.Jan.2021  |
+#|  Author: Mihai Baneu                           Last modified: 05.Jan.2023  |
 #|                                                                            |
 #|____________________________________________________________________________|
 
 CONFIG_MCU                  = STM32F411CE
-CONFIG_OPENOCDDIR 			= ~/work/tools/openocd/src
-CONFIG_OPENOCDCONFIGDIR		= ~/work/tools/openocd/tcl
-CONFIG_OPENOCD_INTERFACE	= interface/stlink.cfg
-CONFIG_OPENOCD_BOARD		= board/stm32f411xx.cfg
+CONFIG_OPENOCD              = openocd
+CONFIG_OPENOCDCONFIGDIR     = ~/work/tools/openocd/tcl
+CONFIG_OPENOCD_INTERFACE    = interface/stlink.cfg
+CONFIG_OPENOCD_BOARD        = board/stm32f411xx.cfg
 
 .PHONY: all build clean
 
@@ -52,25 +52,25 @@ clean:
 	/usr/bin/qbs clean -d build config:$(CONFIG_MCU)
 
 debug:
-	$(CONFIG_OPENOCDDIR)/openocd -s $(CONFIG_OPENOCDCONFIGDIR) -f $(CONFIG_OPENOCD_INTERFACE) -f $(CONFIG_OPENOCD_BOARD)
+	$(CONFIG_OPENOCD) -s $(CONFIG_OPENOCDCONFIGDIR) -f $(CONFIG_OPENOCD_INTERFACE) -f $(CONFIG_OPENOCD_BOARD)
 
 reset:
-	$(CONFIG_OPENOCDDIR)/openocd -s $(CONFIG_OPENOCDCONFIGDIR) -f $(CONFIG_OPENOCD_INTERFACE) -f $(CONFIG_OPENOCD_BOARD) -c "init; reset; exit"
+	$(CONFIG_OPENOCD) -s $(CONFIG_OPENOCDCONFIGDIR) -f $(CONFIG_OPENOCD_INTERFACE) -f $(CONFIG_OPENOCD_BOARD) -c "init; reset; exit"
 
 flash: all
-	$(CONFIG_OPENOCDDIR)/openocd -s $(CONFIG_OPENOCDCONFIGDIR) -f $(CONFIG_OPENOCD_INTERFACE) -f $(CONFIG_OPENOCD_BOARD) -c "program bin/application.bin 0x08000000 verify reset exit"
+	$(CONFIG_OPENOCD) -s $(CONFIG_OPENOCDCONFIGDIR) -f $(CONFIG_OPENOCD_INTERFACE) -f $(CONFIG_OPENOCD_BOARD) -c "program bin/application.bin 0x08000000 verify reset exit"
 
 flash-banks:
-	$(CONFIG_OPENOCDDIR)/openocd -s $(CONFIG_OPENOCDCONFIGDIR) -f $(CONFIG_OPENOCD_INTERFACE) -f $(CONFIG_OPENOCD_BOARD) -c "init; echo [flash banks]; exit"
+	$(CONFIG_OPENOCD) -s $(CONFIG_OPENOCDCONFIGDIR) -f $(CONFIG_OPENOCD_INTERFACE) -f $(CONFIG_OPENOCD_BOARD) -c "init; echo [flash banks]; exit"
 
 flash-list:
-	$(CONFIG_OPENOCDDIR)/openocd -s $(CONFIG_OPENOCDCONFIGDIR) -f $(CONFIG_OPENOCD_INTERFACE) -f $(CONFIG_OPENOCD_BOARD) -c "init; echo [flash list]; exit"
+	$(CONFIG_OPENOCD) -s $(CONFIG_OPENOCDCONFIGDIR) -f $(CONFIG_OPENOCD_INTERFACE) -f $(CONFIG_OPENOCD_BOARD) -c "init; echo [flash list]; exit"
 
 flash-info:
-	$(CONFIG_OPENOCDDIR)/openocd -s $(CONFIG_OPENOCDCONFIGDIR) -f $(CONFIG_OPENOCD_INTERFACE) -f $(CONFIG_OPENOCD_BOARD) -c "init; echo [flash info $(bank)]; exit"
+	$(CONFIG_OPENOCD) -s $(CONFIG_OPENOCDCONFIGDIR) -f $(CONFIG_OPENOCD_INTERFACE) -f $(CONFIG_OPENOCD_BOARD) -c "init; echo [flash info $(bank)]; exit"
 
 flash-read:
-	$(CONFIG_OPENOCDDIR)/openocd -s $(CONFIG_OPENOCDCONFIGDIR) -f $(CONFIG_OPENOCD_INTERFACE) -f $(CONFIG_OPENOCD_BOARD) -c "init; echo [flash read_bank $(bank) bin/flash_$(bank).hex]; exit"
+	$(CONFIG_OPENOCD) -s $(CONFIG_OPENOCDCONFIGDIR) -f $(CONFIG_OPENOCD_INTERFACE) -f $(CONFIG_OPENOCD_BOARD) -c "init; echo [flash read_bank $(bank) bin/flash_$(bank).hex]; exit"
 
 stflash:
 	~/work/tools/stlink/build/Release/bin/st-flash --reset write bin/application.bin 0x08000000
