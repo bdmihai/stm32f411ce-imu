@@ -30,13 +30,12 @@ Product {
     type: "app"
 
     Depends { name: "stm32" }
+    Depends { name: "boot" }
     Depends { name: "cmsis" }
     Depends { name: "freertos" }
     Depends { name: "uprintf" }
     Depends { name: "st7735" }
     Depends { name: "mpu6050" }
-    Depends { name: "startup" }
-    Depends { name: "linker" }
     Depends { name: "rencoder" }
 
     files: [

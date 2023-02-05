@@ -26,5 +26,6 @@
     },
     "Open files list": false,
     "Toggle terminal": false,
-    "Switch header source": true
+    "Switch header source": true,
+    "cortex-debug.variableUseNaturalFormat": false
 }

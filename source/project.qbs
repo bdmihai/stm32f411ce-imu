@@ -33,8 +33,7 @@ Project {
     qbsSearchPaths: "../qbs"
 
     references: [
-        "startup/startup.qbs",
-        "linker/linker.qbs",
+        "boot/boot.qbs",
         "cmsis/cmsis.qbs",
         "freertos/freertos.qbs",
         "st7735/st7735.qbs",

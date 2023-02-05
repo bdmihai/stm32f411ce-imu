@@ -31,3 +31,6 @@
 [submodule "source/mpu6050"]
 	path = source/mpu6050
 	url = git@github.com:bdmihai/stm32-mpu6050.git
+[submodule "source/boot"]
+	path = source/boot
+	url = git@github.com:bdmihai/stm32-boot
