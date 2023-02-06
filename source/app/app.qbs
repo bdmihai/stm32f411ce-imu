@@ -26,26 +26,26 @@
  |___________________________________________________________________________*/
 
 Product {
-    name: "application"
-    type: "app"
+    name: 'application'
+    type: 'app'
 
-    Depends { name: "stm32" }
-    Depends { name: "boot" }
-    Depends { name: "cmsis" }
-    Depends { name: "freertos" }
-    Depends { name: "uprintf" }
-    Depends { name: "st7735" }
-    Depends { name: "mpu6050" }
-    Depends { name: "rencoder" }
+    Depends { name: 'stm32' }
+    Depends { name: 'cmsis' }
+    Depends { name: 'boot' }
+    Depends { name: 'runtime' }
+    Depends { name: 'freertos' }
+    Depends { name: 'st7735' }
+    Depends { name: 'mpu6050' }
+    Depends { name: 'rencoder' }
 
     files: [
-        "*.h",
-        "*.c",
-        "*.cpp"
+        '*.h',
+        '*.c',
+        '*.cpp'
     ]
 
     Group {
         qbs.install: true
-        fileTagsFilter: ["app", "map", "bin"]
+        fileTagsFilter: ['app', 'map', 'bin']
     }
 }

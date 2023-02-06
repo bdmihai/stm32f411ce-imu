@@ -102,6 +102,20 @@ void system_init()
 
     /* stop timer when debuggng */
     SET_BIT(DBGMCU->APB2FZ, DBGMCU_APB2_FZ_DBG_TIM10_STOP);
+
+    /* ITM trace configuration */
+    SET_BIT(DBGMCU->CR, DBGMCU_CR_TRACE_IOEN);
+    TPI->SPPR = 0x00000002;              /* "Selected PIN Protocol Register": Select which protocol to use for trace output (2: SWO NRZ, 1: SWO Manchester encoding) */
+    TPI->ACPR = (96000000 / 96000) - 1;  /* Divisor for Trace Clock is Prescaler + 1 */
+    TPI->FFCR = 0x00000100;              /* Formatter and Flush Control Register */
+    ITM->LAR  = 0xC5ACCE55;              /* ITM Lock Access Register, C5ACCE55 enables more write access to Control Register 0xE00 :: 0xFFC */
+    ITM->TCR  = ITM_TCR_TraceBusID_Msk | 
+                ITM_TCR_SWOENA_Msk     | 
+                ITM_TCR_SYNCENA_Msk    | 
+                ITM_TCR_ITMENA_Msk;      /* ITM Trace Control Register */
+    ITM->TPR  = ITM_TPR_PRIVMASK_Msk;    /* ITM Trace Privilege Register */
+    ITM->TER  = 0x01;                    /* ITM Trace Enable Register. Enabled tracing on stimulus ports. One bit per stimulus port. */
+    DWT->CTRL = 0x400003FE;              /* DWT_CTRL */
 }
 
 /**
@@ -113,44 +127,3 @@ extern "C" void delay_us(const uint32_t us)
     do {
     } while (TIM10->CNT < us );
 }
-
-/**
- * blink the led in case of problems
- * This function can only be called after the initialization phase. It is used for
- * faults after RTOS start.
-*/
-extern "C" void blink(const uint8_t n)
-{
-    gpio led_gpio(GPIOC, 13, gpio::output, gpio::push_pull, gpio::low_speed, gpio::no_pull);
-    led_gpio.init();
-
-    /* enable DWT */
-    CoreDebug->DEMCR |= CoreDebug_DEMCR_TRCENA_Msk;
-    DWT->CTRL |= DWT_CTRL_CYCCNTENA_Msk;
-
-    for (;;) {
-        for (int i = 0; i < n; i++) {
-            led_gpio.low();
-            DWT->CYCCNT = 0;
-            do {
-            } while (DWT->CYCCNT < (100 * (configCPU_CLOCK_HZ / 1000)));
-
-            led_gpio.high();
-            DWT->CYCCNT = 0;
-            do {
-            } while (DWT->CYCCNT < (400 * (configCPU_CLOCK_HZ / 1000)));
-        }
-        do {
-        } while (DWT->CYCCNT < (2000 * (configCPU_CLOCK_HZ / 1000)));
-    }
-}
-
-extern "C" int _write(int file, char *ptr, int len)
-{
-    (void)(file);
-    for (int i = 0; i < len; i++) {
-        ITM_SendChar((*ptr++));
-    }
-    return len;
-}
-

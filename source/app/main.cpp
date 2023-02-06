@@ -25,6 +25,9 @@
  |                                                                            |
  |___________________________________________________________________________*/
 
+#include <stdlib.h>
+#include <stdio.h>
+
 #include "stm32f4xx.h"
 #include "stm32rtos.h"
 #include "task.h"
@@ -133,7 +136,7 @@ int main(void)
     rencoder_init(0, 100);
 
     /* create the tasks specific to this application. */
-    xTaskCreate(led_run,      "led",          configMINIMAL_STACK_SIZE,     NULL, 3, NULL);
+    xTaskCreate(led_run,      "led",          configMINIMAL_STACK_SIZE*2,   NULL, 10, NULL);
     xTaskCreate(tft_run,      "tft",          configMINIMAL_STACK_SIZE*2,   NULL, 2, NULL);
     xTaskCreate(dma_run,      "dma",          configMINIMAL_STACK_SIZE*2,   NULL, 2, NULL);
     xTaskCreate(rencoder_run, "rencoder",     configMINIMAL_STACK_SIZE,     NULL, 2, NULL);
@@ -145,6 +148,5 @@ int main(void)
     vTaskStartScheduler();
 
     /* should never get here ... */
-    blink(10);
     return 0;
 }

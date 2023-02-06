@@ -38,7 +38,7 @@ void gpio_init()
     /* disable JTAG */
     MODIFY_REG(GPIOA->MODER,    GPIO_MODER_MODER15_Msk,     0);                         /* JTDI disabled */
     MODIFY_REG(GPIOB->MODER,    GPIO_MODER_MODER4_Msk,      0);                         /* NJTRST disabled */
-    MODIFY_REG(GPIOB->MODER,    GPIO_MODER_MODER3_Msk,      0);                         /* JTDO disabled */
+    //MODIFY_REG(GPIOB->MODER,    GPIO_MODER_MODER3_Msk,      0);                         /* JTDO disabled */
 
     /* configuration of the I2C GPIO pins */
     MODIFY_REG(GPIOB->MODER, GPIO_MODER_MODER6_Msk, GPIO_MODER_MODER6_1);                                   /* set the pin as alternate function */

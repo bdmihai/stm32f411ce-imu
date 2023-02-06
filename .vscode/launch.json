@@ -20,10 +20,11 @@
                 "interface/stlink.cfg",
                 "board/stm32f411xx.cfg"
             ],
+            //"runToEntryPoint": "main",
             "swoConfig":{
                 "enabled":true,
                 "source":"probe",
-                "swoFrequency": 2000000,
+                "swoFrequency":   96000,
                 "cpuFrequency":96000000,
                 "decoders": [
                     {

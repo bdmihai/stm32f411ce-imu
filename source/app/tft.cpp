@@ -25,10 +25,12 @@
  |                                                                            |
  |___________________________________________________________________________*/
 
+#include <stdlib.h>
+#include <string.h>
+#include <stdio.h>
+
 #include "stm32f4xx.h"
 #include "stm32rtos.h"
-#include "stdlib.h"
-#include "string.h"
 #include "queue.h"
 #include "mpu6050.h"
 #include "gpio.h"
@@ -36,7 +38,7 @@
 #include "tft.h"
 #include "spi.h"
 #include "st7735.h"
-#include "printf.h"
+
 
 extern const uint8_t u8x8_font_8x13B_1x2_f[];
 

@@ -25,6 +25,7 @@
  |                                                                            |
  |___________________________________________________________________________*/
 
+#include <stdio.h>
 #include "stm32f4xx.h"
 #include "stm32rtos.h"
 #include "queue.h"
@@ -32,6 +33,8 @@
 #include "system.h"
 #include "gpio.h"
 #include "dma.h"
+
+extern "C" void panic(const char *fmt, ...);
 
 void isr_init()
 {
@@ -67,22 +70,19 @@ void isr_init()
     NVIC_EnableIRQ(DMA1_Stream1_IRQn);
 }
 
-/** Hard fault - blink four short flash every two seconds */
 extern "C" void HardFault_Handler()
 {
-    blink(4);
+    panic("HardFault_Handler");
 }
 
-/** Bus fault - blink five short flashes every two seconds */
 extern "C" void BusFault_Handler()
 {
-    blink(5);
+    panic("BusFault_Handler");
 }
 
-/** Usage fault - blink six short flashes every two seconds */
 extern "C" void UsageFault_Handler()
 {
-    blink(6);
+    panic("UsageFault_Handler");
 }
 
 extern "C" void EXTI0_IRQHandler(void)

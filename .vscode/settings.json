@@ -22,10 +22,13 @@
         "tft.h": "c",
         "queue.h": "c",
         "mpu6050.h": "c",
-        "gpio.h": "c"
+        "gpio.h": "c",
+        "stdarg.h": "c",
+        "stdbool.h": "c",
+        "stdint.h": "c"
     },
     "Open files list": false,
     "Toggle terminal": false,
     "Switch header source": true,
-    "cortex-debug.variableUseNaturalFormat": false
+    "cortex-debug.variableUseNaturalFormat": true
 }

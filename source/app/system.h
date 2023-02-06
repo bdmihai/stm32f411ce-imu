@@ -34,7 +34,6 @@ void system_init();
 #endif
 
 void delay_us(const uint32_t us);
-void blink(const uint8_t n);
 
 #ifdef __cplusplus
     }

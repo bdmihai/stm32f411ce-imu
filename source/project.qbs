@@ -28,19 +28,19 @@
 import qbs
 
 Project {
-    name: "imu"
-    minimumQbsVersion: "1.22"
-    qbsSearchPaths: "../qbs"
+    name: 'imu'
+    minimumQbsVersion: '1.22'
+    qbsSearchPaths: '../qbs'
 
     references: [
-        "boot/boot.qbs",
-        "cmsis/cmsis.qbs",
-        "freertos/freertos.qbs",
-        "st7735/st7735.qbs",
-        "mpu6050/mpu6050.qbs",
-        "uprintf/uprintf.qbs",
-        "rencoder/rencoder.qbs",
-        "app/app.qbs"
+        'boot/boot.qbs',
+        'cmsis/cmsis.qbs',
+        'runtime/runtime.qbs',
+        'freertos/freertos.qbs',
+        'st7735/st7735.qbs',
+        'mpu6050/mpu6050.qbs',
+        'rencoder/rencoder.qbs',
+        'app/app.qbs'
     ]
 }
 
