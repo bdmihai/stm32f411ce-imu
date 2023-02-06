@@ -4,12 +4,9 @@
 [submodule "qbs/modules/stm32"]
 	path = qbs/modules/stm32
 	url = git@github.com:bdmihai/stm32-qbs
-[submodule "source/startup"]
-	path = source/startup
-	url = git@github.com:bdmihai/stm32-startup
-[submodule "source/linker"]
-	path = source/linker
-	url = git@github.com:bdmihai/stm32-linker
+[submodule "source/boot"]
+	path = source/boot
+	url = git@github.com:bdmihai/stm32-boot
 [submodule "source/hal"]
 	path = source/hal
 	url = git@github.com:bdmihai/stm32-hal
@@ -31,6 +28,6 @@
 [submodule "source/mpu6050"]
 	path = source/mpu6050
 	url = git@github.com:bdmihai/stm32-mpu6050.git
-[submodule "source/boot"]
-	path = source/boot
-	url = git@github.com:bdmihai/stm32-boot
+[submodule "source/runtime"]
+	path = source/runtime
+	url = git@github.com:bdmihai/stm32-runtime
