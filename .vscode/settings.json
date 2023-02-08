@@ -30,5 +30,5 @@
     "Open files list": false,
     "Toggle terminal": false,
     "Switch header source": true,
-    "cortex-debug.variableUseNaturalFormat": true
+    "cortex-debug.variableUseNaturalFormat": false
 }
