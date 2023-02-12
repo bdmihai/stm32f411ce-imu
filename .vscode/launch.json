@@ -21,6 +21,7 @@
                 "board/stm32f411xx.cfg"
             ],
             //"runToEntryPoint": "main",
+            "rtos": "FreeRTOS",
             "swoConfig":{
                 "enabled":true,
                 "source":"probe",

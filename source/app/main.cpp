@@ -136,13 +136,13 @@ int main(void)
     rencoder_init(0, 100);
 
     /* create the tasks specific to this application. */
-    xTaskCreate(led_run,      "led",          configMINIMAL_STACK_SIZE*2,   NULL, 10, NULL);
-    xTaskCreate(tft_run,      "tft",          configMINIMAL_STACK_SIZE*2,   NULL, 2, NULL);
+    xTaskCreate(led_run,      "led",          configMINIMAL_STACK_SIZE  ,   NULL, 10, NULL);
+    xTaskCreate(tft_run,      "tft",          configMINIMAL_STACK_SIZE*6,   NULL, 2, NULL);
     xTaskCreate(dma_run,      "dma",          configMINIMAL_STACK_SIZE*2,   NULL, 2, NULL);
-    xTaskCreate(rencoder_run, "rencoder",     configMINIMAL_STACK_SIZE,     NULL, 2, NULL);
-    xTaskCreate(user_handler, "user_handler", configMINIMAL_STACK_SIZE*2,   NULL, 2, NULL);
-    xTaskCreate(update_run,   "update_run",   configMINIMAL_STACK_SIZE*2,   NULL, 2, NULL);
-    xTaskCreate(motion_run,   "motion_run",   configMINIMAL_STACK_SIZE*2,   NULL, 9, &motion_run_task);
+    xTaskCreate(rencoder_run, "rencoder",     configMINIMAL_STACK_SIZE*2,   NULL, 2, NULL);
+    xTaskCreate(user_handler, "user_handler", configMINIMAL_STACK_SIZE*3,   NULL, 2, NULL);
+    xTaskCreate(update_run,   "update_run",   configMINIMAL_STACK_SIZE*3,   NULL, 2, NULL);
+    xTaskCreate(motion_run,   "motion_run",   configMINIMAL_STACK_SIZE*3,   NULL, 9, &motion_run_task);
 
     /* start the scheduler. */
     vTaskStartScheduler();
