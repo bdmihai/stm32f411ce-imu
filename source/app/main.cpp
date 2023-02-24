@@ -25,9 +25,6 @@
  |                                                                            |
  |___________________________________________________________________________*/
 
-#include <stdlib.h>
-#include <stdio.h>
-
 #include "stm32f4xx.h"
 #include "stm32rtos.h"
 #include "task.h"
@@ -99,7 +96,7 @@ static void motion_run(void *pvParameters)
 
     for (;;) {
         // wait to be notified of an interrupt
-        ulTaskNotifyTake(pdTRUE, portMAX_DELAY );
+        ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
 
         // get the data from the IMU
         motion = mpu6050_get_motion();
@@ -136,7 +133,7 @@ int main(void)
     rencoder_init(0, 100);
 
     /* create the tasks specific to this application. */
-    xTaskCreate(led_run,      "led",          configMINIMAL_STACK_SIZE  ,   NULL, 10, NULL);
+    xTaskCreate(led_run,      "led",          configMINIMAL_STACK_SIZE  ,   NULL, 1, NULL);
     xTaskCreate(tft_run,      "tft",          configMINIMAL_STACK_SIZE*6,   NULL, 2, NULL);
     xTaskCreate(dma_run,      "dma",          configMINIMAL_STACK_SIZE*2,   NULL, 2, NULL);
     xTaskCreate(rencoder_run, "rencoder",     configMINIMAL_STACK_SIZE*2,   NULL, 2, NULL);
