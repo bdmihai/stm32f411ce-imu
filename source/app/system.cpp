@@ -106,7 +106,7 @@ void system_init()
     /* ITM trace configuration */
     SET_BIT(DBGMCU->CR, DBGMCU_CR_TRACE_IOEN);
     TPI->SPPR = 0x00000002;              /* "Selected PIN Protocol Register": Select which protocol to use for trace output (2: SWO NRZ, 1: SWO Manchester encoding) */
-    TPI->ACPR = 96000000 / 960000 - 1;   /* Divisor for Trace Clock is Prescaler + 1 */
+    TPI->ACPR = 100000000 / 1000000 - 1; /* Divisor for Trace Clock is Prescaler + 1 */
     TPI->FFCR = 0x00000100;              /* Formatter and Flush Control Register */
     ITM->LAR  = 0xC5ACCE55;              /* ITM Lock Access Register, C5ACCE55 enables more write access to Control Register 0xE00 :: 0xFFC */
     ITM->TCR  = ITM_TCR_TraceBusID_Msk | 

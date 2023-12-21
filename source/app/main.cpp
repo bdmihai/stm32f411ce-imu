@@ -25,6 +25,7 @@
  |                                                                            |
  |___________________________________________________________________________*/
 
+#include <stdio.h>
 #include "stm32f4xx.h"
 #include "stm32rtos.h"
 #include "task.h"
@@ -52,6 +53,7 @@ static void user_handler(void *pvParameters)
         if (xQueueReceive(rencoder_output_queue, &event, portMAX_DELAY) == pdPASS) {
             switch(event.type) {
                 case rencoder_output_rotation:
+                    printf("Encoder rotation: %d\n", event.position);
                     break;
                 case rencoder_output_key:
                     if (event.key == RENCODER_KEY_RELEASED) {
