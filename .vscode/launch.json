@@ -13,9 +13,6 @@
             "type": "cortex-debug",
             "servertype": "openocd",
             "svdFile": "${workspaceFolder}/doc/stm32/svd/STM32F411.svd",
-            "searchDir": [
-                "${env:HOME}//work/tools/openocd/tcl"
-            ],
             "configFiles": [
                 "interface/stlink.cfg",
                 "board/stm32f411xx.cfg"
@@ -36,29 +33,6 @@
                     }
                 ]
             }
-        },
-        {
-            "cwd": "${workspaceRoot}",
-            "executable": "${workspaceFolder}/bin/application.elf",
-            "name": "OpenOCD + RTOS",
-            "request": "launch",
-            "device": "STM32F411xx",
-            "type": "cortex-debug",
-            "servertype": "openocd",
-            "rtos": "FreeRTOS",
-            "svdFile": "${workspaceFolder}/doc/stm32/svd/STM32F411.svd",
-            "searchDir": [
-                "${env:HOME}//work/tools/openocd/tcl"
-            ],
-            "configFiles": [
-                "interface/stlink.cfg",
-                "board/stm32f411xx.cfg"
-            ],
-            "openOCDLaunchCommands": [
-                "stm32f4x.cpu configure -rtos FreeRTOS"
-            ],
-            "overrideLaunchCommands": [
-            ]
         }
     ]
 }
