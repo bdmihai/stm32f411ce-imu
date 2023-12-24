@@ -116,6 +116,10 @@ void system_init()
     ITM->TPR  = ITM_TPR_PRIVMASK_Msk;    /* ITM Trace Privilege Register */
     ITM->TER  = 0x01;                    /* ITM Trace Enable Register. Enabled tracing on stimulus ports. One bit per stimulus port. */
     DWT->CTRL = 0x400003FE;              /* DWT_CTRL */
+
+    /* set-up the vector table in ram */
+    extern char __isr_vector_start;
+    SCB->VTOR = (uintptr_t) &__isr_vector_start;
 }
 
 /**
