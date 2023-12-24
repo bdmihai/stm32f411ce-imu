@@ -34,6 +34,7 @@ void system_init();
 #endif
 
 void delay_us(const uint32_t us);
+unsigned int system_cpu_f();
 
 #ifdef __cplusplus
     }

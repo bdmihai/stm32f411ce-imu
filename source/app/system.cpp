@@ -26,7 +26,6 @@
  |___________________________________________________________________________*/
 
 #include "stm32f4xx.h"
-#include "stm32rtos.h"
 #include "gpio.h"
 #include "system.h"
 
@@ -97,7 +96,7 @@ void system_init()
     SET_BIT(RCC->APB2ENR, RCC_APB2ENR_SPI1EN);
 
     /* one us timer for delay */
-    TIM10->PSC = (configCPU_CLOCK_HZ / 1000000) - 1;
+    TIM10->PSC = (system_cpu_f() / 1000000) - 1;
     MODIFY_REG(TIM10->CR1, TIM_CR1_CEN_Msk, TIM_CR1_CEN);
 
     /* stop timer when debuggng */
@@ -106,7 +105,7 @@ void system_init()
     /* ITM trace configuration */
     SET_BIT(DBGMCU->CR, DBGMCU_CR_TRACE_IOEN);
     TPI->SPPR = 0x00000002;              /* "Selected PIN Protocol Register": Select which protocol to use for trace output (2: SWO NRZ, 1: SWO Manchester encoding) */
-    TPI->ACPR = 100000000 / 1000000 - 1; /* Divisor for Trace Clock is Prescaler + 1 */
+    TPI->ACPR = 100 - 1;                 /* Divisor for Trace Clock is Prescaler + 1: 100 times slower than cpu freq */
     TPI->FFCR = 0x00000100;              /* Formatter and Flush Control Register */
     ITM->LAR  = 0xC5ACCE55;              /* ITM Lock Access Register, C5ACCE55 enables more write access to Control Register 0xE00 :: 0xFFC */
     ITM->TCR  = ITM_TCR_TraceBusID_Msk | 
@@ -130,4 +129,9 @@ extern "C" void delay_us(const uint32_t us)
     SET_BIT(TIM10->EGR, TIM_EGR_UG);
     do {
     } while (TIM10->CNT < us );
+}
+
+extern "C" unsigned int system_cpu_f()
+{
+    return 100000000;
 }
