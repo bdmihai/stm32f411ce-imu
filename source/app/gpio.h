@@ -30,45 +30,15 @@
 /* initialization */
 void gpio_init();
 
+void gpio_set_led();
+void gpio_reset_led();
+
+void gpio_tft_dc_high();
+void gpio_tft_dc_low();
+void gpio_tft_res_high();
+void gpio_tft_res_low();
+
 void gpio_handle_rotation();
 void gpio_handle_key();
 
 void gpio_handle_imu_interupt();
-
-
-class gpio {
-
-    public: 
-        typedef enum {
-            input = 0, output = 1, alt = 2
-        } gpio_mode;
-
-        typedef enum {
-            push_pull = 0, open_drain = 1
-        } gpio_otype;
-
-        typedef enum {
-            low_speed = 0, medium_speed = 1, fast_speed = 2, high_speed = 3
-        } gpio_ospeed;
-
-        typedef enum {
-            no_pull = 0, pull_up = 1, pull_down = 2
-        } gpio_pupd;
-
-        gpio(GPIO_TypeDef *port, uint8_t pin, gpio_mode mode, gpio_otype otype, gpio_ospeed ospeed, gpio_pupd pupd);
-
-        void init();
-
-        void high();
-        void low();
-        void toggle();
-        uint32_t value();
-
-    private:
-        GPIO_TypeDef *m_port;
-        uint8_t m_pin;
-        gpio_mode m_mode;
-        gpio_otype m_otype;
-        gpio_ospeed m_ospeed;
-        gpio_pupd m_pupd;
-};

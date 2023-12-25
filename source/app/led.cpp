@@ -33,30 +33,24 @@
 
 void led_init()
 {
-
+    gpio_reset_led();
 }
 
 void led_run(void *pvParameters)
 {
     (void)pvParameters;
 
-    gpio led_gpio(GPIOC, 13, gpio::output, gpio::push_pull, gpio::low_speed, gpio::no_pull);
-    led_gpio.init();
-
-    /* led OFF */
-    led_gpio.low();
-
     for (;;) {
-        led_gpio.high();
+        gpio_set_led();
         vTaskDelay(1000 / portTICK_PERIOD_MS);
 
-        led_gpio.low();
+        gpio_reset_led();
         vTaskDelay(100 / portTICK_PERIOD_MS);
 
-        led_gpio.high();
+        gpio_set_led();
         vTaskDelay(100 / portTICK_PERIOD_MS);
 
-        led_gpio.low();
+        gpio_reset_led();
         vTaskDelay(100 / portTICK_PERIOD_MS);
     }
 }
