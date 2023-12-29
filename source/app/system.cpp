@@ -102,20 +102,6 @@ void system_init()
     /* stop timer when debuggng */
     SET_BIT(DBGMCU->APB2FZ, DBGMCU_APB2_FZ_DBG_TIM10_STOP);
 
-    /* ITM trace configuration */
-    SET_BIT(DBGMCU->CR, DBGMCU_CR_TRACE_IOEN);
-    TPI->SPPR = 0x00000002;              /* "Selected PIN Protocol Register": Select which protocol to use for trace output (2: SWO NRZ, 1: SWO Manchester encoding) */
-    TPI->ACPR = 100 - 1;                 /* Divisor for Trace Clock is Prescaler + 1: 100 times slower than cpu freq */
-    TPI->FFCR = 0x00000100;              /* Formatter and Flush Control Register */
-    ITM->LAR  = 0xC5ACCE55;              /* ITM Lock Access Register, C5ACCE55 enables more write access to Control Register 0xE00 :: 0xFFC */
-    ITM->TCR  = ITM_TCR_TraceBusID_Msk | 
-                ITM_TCR_SWOENA_Msk     | 
-                ITM_TCR_SYNCENA_Msk    | 
-                ITM_TCR_ITMENA_Msk;      /* ITM Trace Control Register */
-    ITM->TPR  = ITM_TPR_PRIVMASK_Msk;    /* ITM Trace Privilege Register */
-    ITM->TER  = 0x01;                    /* ITM Trace Enable Register. Enabled tracing on stimulus ports. One bit per stimulus port. */
-    DWT->CTRL = 0x400003FE;              /* DWT_CTRL */
-
     /* set-up the vector table in ram */
     extern char __isr_vector_start;
     SCB->VTOR = (uintptr_t) &__isr_vector_start;

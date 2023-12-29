@@ -26,9 +26,9 @@
 #|____________________________________________________________________________|
 
 CONFIG_MCU                  = STM32F411CE
-CONFIG_OPENOCD              = openocd
-CONFIG_OPENOCDCONFIGDIR     = ~/work/tools/openocd/tcl
-CONFIG_OPENOCD_INTERFACE    = interface/stlink.cfg
+CONFIG_OPENOCD              = /usr/local/bin/openocd
+CONFIG_OPENOCDCONFIGDIR     = /usr/local/share/openocd/scripts
+CONFIG_OPENOCD_INTERFACE    = interface/stlink-v3.cfg
 CONFIG_OPENOCD_BOARD        = board/stm32f411xx.cfg
 
 .PHONY: all build clean
