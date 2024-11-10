@@ -14,11 +14,11 @@
             "servertype": "openocd",
             "svdFile": "${workspaceFolder}/doc/stm32/svd/STM32F411.svd",
             "configFiles": [
-                "interface/stlink.cfg",
+                "interface/stlink-v3.cfg",
                 "board/stm32f411xx.cfg"
             ],
             //"runToEntryPoint": "main",
-            "rtos": "FreeRTOS",
+            //"rtos": "FreeRTOS",
             "swoConfig":{
                 "enabled":true,
                 "source":"probe",
